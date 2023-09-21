@@ -1,0 +1,30 @@
+variables:
+  GIT_DEPTH: 1
+stages:
+  - build
+  - deploy
+
+build-frontend-release:
+  stage: build
+  tags:
+    - backend-runner
+  script:
+    - npm i
+    - npm run build
+  only:
+      - tags
+
+deploy-frontend-release:
+    stage: deploy
+    tags:
+        - backend-runner
+    variables:
+        GIT_STRATEGY: none
+    script:
+        - echo "deploy"
+        - cd dist
+        - cp -r * /var/www/m.onekids.edu.vn/
+        - /opt/onekids/copy-frontend.sh
+
+    only:
+        - tags
